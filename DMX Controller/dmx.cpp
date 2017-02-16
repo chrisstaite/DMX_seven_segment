@@ -70,7 +70,7 @@ void Dmx::initTx()
 
 void Dmx::setChannel(uint16_t channel, uint8_t value)
 {
-    if (channel > 0 && channel < MAX_CHANNEL)
+    if (channel >= 0 && channel < MAX_CHANNEL)
     {
         m_data[channel] = value;
     }

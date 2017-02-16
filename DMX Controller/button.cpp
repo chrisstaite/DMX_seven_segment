@@ -22,7 +22,7 @@ Button::Button(Pin& pin) :
 
 bool Button::pressed()
 {
-    bool result = (m_pin == false);
+    bool result = m_pin;
 
     if (result)
     {

@@ -94,7 +94,6 @@ void SevenSegmentArray::displayStep()
         {
             m_digitSelectors[i] = true;
         }
-        m_digitSelectors[digit] = false;
     }
 
     // Get the digit to display
@@ -109,9 +108,13 @@ void SevenSegmentArray::displayStep()
     {
         value = (m_currentValue / divisor) % 10;
     }
-    value =8;
 
     m_segment.value(value, sequenceIndex);
+
+    if (sequenceIndex == 0)
+    {
+        m_digitSelectors[digit] = false;
+    }
 
     // Increment the step and reset if the final one
     ++m_currentStep;

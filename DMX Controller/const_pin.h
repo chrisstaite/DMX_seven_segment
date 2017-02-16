@@ -59,13 +59,13 @@ class ConstPin
 template<typename Port, unsigned int N>
 void ConstPin<Port, N>::input()
 {
-    Port::ddr() |= mask();
+    Port::ddr() &= ~mask();
 }
 
 template<typename Port, unsigned int N>
 void ConstPin<Port, N>::output()
 {
-    Port::ddr() &= ~mask();
+    Port::ddr() |= mask();
 }
 
 template<typename Port, unsigned int N>

@@ -22,7 +22,7 @@ namespace {
 
 /// The number of milliseconds between the last change and
 /// saving the values to the EEPROM
-constexpr uint16_t SAVE_INTERVAL = 60000;
+constexpr uint16_t SAVE_INTERVAL = 10000;
 
 /// The number of milliseconds between the changing mode and
 /// displaying the selected colour on the LED
@@ -33,18 +33,18 @@ constexpr uint16_t RGB_INTERVAL = 2000;
 int main()
 {
     // Configure the buttons
-    avr::Pin buttonUp{avr::ConstPin<avr::PortD, 7>::toPin()};
-    avr::Pin buttonDown{avr::ConstPin<avr::PortD, 6>::toPin()};
-    avr::Pin buttonMode{avr::ConstPin<avr::PortD, 5>::toPin()};
+    avr::Pin buttonUp{avr::ConstPin<avr::PortD, 6>::toPin()};
+    avr::Pin buttonDown{avr::ConstPin<avr::PortD, 5>::toPin()};
+    avr::Pin buttonMode{avr::ConstPin<avr::PortD, 7>::toPin()};
     avr::Button up{buttonUp};
     avr::Button down{buttonDown};
     avr::Button mode{buttonMode};
 
     // Configure the Display
     avr::Pin digitSelectors[3] = {
-        {avr::ConstPin<avr::PortB, 0>::toPin()},
+        {avr::ConstPin<avr::PortB, 2>::toPin()},
         {avr::ConstPin<avr::PortB, 1>::toPin()},
-        {avr::ConstPin<avr::PortB, 2>::toPin()}
+        {avr::ConstPin<avr::PortB, 0>::toPin()}
     };
 	led::SevenSegmentArray display{digitSelectors, avr::PortC{}};
 
