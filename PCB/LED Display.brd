@@ -2969,8 +2969,8 @@ Source: www.tycoelectronics.com .. ENG_DS_1654001_1099_RJ_L_0507.pdf</descriptio
 <contactref element="DISPLAY" pad="P$3"/>
 <contactref element="R6" pad="2"/>
 <wire x1="34.102" y1="20.574" x2="33.02" y2="20.574" width="0.254" layer="1"/>
-<wire x1="33.02" y1="20.574" x2="30.988" y2="22.352" width="0.254" layer="1"/>
-<wire x1="30.988" y1="22.352" x2="28.702" y2="22.352" width="0.254" layer="1"/>
+<wire x1="33.02" y1="20.574" x2="31.242" y2="22.352" width="0.254" layer="1"/>
+<wire x1="31.242" y1="22.352" x2="28.702" y2="22.352" width="0.254" layer="1"/>
 <wire x1="28.702" y1="22.352" x2="27.305" y2="23.749" width="0.254" layer="1"/>
 <wire x1="27.305" y1="23.749" x2="27.305" y2="27.559" width="0.254" layer="1"/>
 <wire x1="27.305" y1="27.559" x2="30.099" y2="30.353" width="0.254" layer="1"/>

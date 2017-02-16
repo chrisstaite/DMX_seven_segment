@@ -55,6 +55,8 @@ class WS2812
     void sendRgb(RGB* values, uint16_t count);
 
   private:
+    void sendRgb(uint8_t* values, uint16_t count);
+
     uint8_t m_mask;
     volatile uint8_t& m_port;
 };

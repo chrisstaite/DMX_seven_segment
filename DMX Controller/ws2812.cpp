@@ -83,17 +83,18 @@ inline void nop<2>()
 
 void WS2812::sendRgb(RGB* values, uint16_t count)
 {
+    sendRgb(reinterpret_cast<uint8_t*>(values), count * sizeof(RGB));
+}
+
+void WS2812::sendRgb(uint8_t* values, uint16_t count)
+{
     // Counter for the 8 bits in the byte
     uint8_t ctr;
 
-    // Make a byte array to send
-    uint8_t* bytes = reinterpret_cast<uint8_t*>(values);
-    count *= sizeof(RGB);
-
     // Calculate the masks
-    volatile uint8_t& port = m_port;
-    uint8_t masklo = port & ~m_mask;
-    uint8_t maskhi = port |  m_mask;
+    volatile uint8_t* port = &m_port;
+    uint8_t masklo = *port & ~m_mask;
+    uint8_t maskhi = *port |  m_mask;
 
     // Save the interrupt state and disable whether
     // it's set or not...
@@ -104,7 +105,7 @@ void WS2812::sendRgb(RGB* values, uint16_t count)
     {
         // One line only to evaluate to ldi rn, Z+
         // Does not get optimized to that on two lines...
-        uint8_t curbyte = *bytes++;
+        uint8_t curbyte = *values++;
 
         asm volatile(
             "ldi %0, 8\n\t"
@@ -124,7 +125,7 @@ void WS2812::sendRgb(RGB* values, uint16_t count)
         nop<ONE_CYCLES_NOP>();
         asm volatile(
             "brcc skipone%=\n\t"
-            "st   X, %4\n\t"
+            "st X, %4\n\t"
             "skipone%=:"
             :	"=&d" (ctr)
             :	"r" (curbyte), "x" (port), "r" (maskhi), "r" (masklo)

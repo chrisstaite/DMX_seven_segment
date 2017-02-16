@@ -17,8 +17,8 @@ namespace dmx {
 class Dmx
 {
   public:
-    /// The number of channels to transmit (32 - 512)
-    static constexpr int16_t MAX_CHANNEL = 32;
+    /// The number of channels to transmit
+    static constexpr int16_t MAX_CHANNEL = 512;
   
     /// Construct an instance that can talk to WS2812 chips
     /// on a given pin
@@ -31,6 +31,8 @@ class Dmx
 
     Dmx(const Dmx&) = delete;
     Dmx& operator=(const Dmx&) = delete;
+    
+    ~Dmx();
 
     void setChannel(uint16_t channel, uint8_t value);
     uint8_t& getChannel(uint16_t channel);
@@ -42,7 +44,6 @@ class Dmx
 
   private:
     void initTx();
-    void writeByte(uint8_t byte);
     void setBaud(uint16_t baudSetting, uint8_t format);
 
     uint8_t m_data[MAX_CHANNEL];
