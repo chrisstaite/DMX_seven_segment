@@ -42,11 +42,11 @@ constexpr int32_t TOTAL_CYCLES = ((F_CPU / 1000) * TOTAL_PERIOD_NS + 500000) / 1
 constexpr int32_t ZERO_CYCLES_NOP =
     (ZERO_CYCLES - LOW_CYCLES_USED < 0) ? 0 : (ZERO_CYCLES - LOW_CYCLES_USED);
 constexpr int32_t ONE_CYCLES_NOP =
-    (ONE_CYCLES - HIGH_CYCLES_USED - ZERO_CYCLES_NOP < 0) ? 0 :
-    (ONE_CYCLES - HIGH_CYCLES_USED - ZERO_CYCLES_NOP);
+    (ONE_CYCLES - HIGH_CYCLES_USED - (ZERO_CYCLES - LOW_CYCLES_USED) < 0) ? 0 :
+    (ONE_CYCLES - HIGH_CYCLES_USED - (ZERO_CYCLES - LOW_CYCLES_USED));
 constexpr int32_t FINAL_CYCLES_NOP =
-    (TOTAL_CYCLES - TOTAL_CYCLES_USED - ZERO_CYCLES_NOP - ONE_CYCLES_NOP < 0) ? 0 :
-    (TOTAL_CYCLES - TOTAL_CYCLES_USED - ZERO_CYCLES_NOP - ONE_CYCLES_NOP);
+    (TOTAL_CYCLES - TOTAL_CYCLES_USED - (ONE_CYCLES - HIGH_CYCLES_USED) < 0) ? 0 :
+    (TOTAL_CYCLES - TOTAL_CYCLES_USED - (ONE_CYCLES - HIGH_CYCLES_USED));
 
 // The only critical timing parameter is the minimum pulse length of the "0"
 // Warn or throw error if this timing can not be met with current F_CPU settings.
