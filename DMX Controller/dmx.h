@@ -55,7 +55,7 @@ Dmx::Dmx(avr::ConstPin<P, N> pin) :
     Dmx{}
 {
     pin.output();
-    pin = true;  // Recieve mode
+    pin = true;  // Transmit mode
 }
 
 inline uint8_t& Dmx::operator[] (uint16_t channel)

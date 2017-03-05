@@ -28,68 +28,70 @@ constexpr uint16_t SAVE_INTERVAL = 10000;
 /// displaying the selected colour on the LED
 constexpr uint16_t RGB_INTERVAL = 2000;
 
+// Configure the buttons
+avr::Pin buttonUp{avr::ConstPin<avr::PortD, 6>::toPin()};
+avr::Pin buttonDown{avr::ConstPin<avr::PortD, 5>::toPin()};
+avr::Pin buttonMode{avr::ConstPin<avr::PortD, 7>::toPin()};
+avr::Button up{buttonUp};
+avr::Button down{buttonDown};
+avr::Button mode{buttonMode};
+
+// Configure the Display
+avr::Pin digitSelectors[3] = {
+    {avr::ConstPin<avr::PortB, 2>::toPin()},
+    {avr::ConstPin<avr::PortB, 1>::toPin()},
+    {avr::ConstPin<avr::PortB, 0>::toPin()}
+};
+led::SevenSegmentArray display{digitSelectors, avr::PortC{}};
+
+// Configure millisecond timer
+avr::MsTimer timer{};
+
+// Configure DMX
+dmx::Dmx dmxOutput{avr::ConstPin<avr::PortD, 2>{}};
+
+// Configure LED
+led::WS2812 ws2812{avr::ConstPin<avr::PortA, 0>{}};
+
+// Load the saved values
+avr::Eeprom eeprom{0};
+
+// Create the controller
+led::Controller controller{dmxOutput, display};
+
+// Configure colour LED setter
+led::RgbDisplayEvent rgbDisplayEvent{ws2812, controller};
+avr::TimedEvent rgbDisplayTimer{rgbDisplayEvent};
+
+// Configure EEPROM saver
+led::SaveEvent saveEvent{eeprom, controller};
+avr::TimedEvent saveTimer{saveEvent};
+
+// Configure plus and minus buttons
+avr::RepeatEvent<led::Controller, &led::Controller::increase>
+    increaseEvent{controller};
+avr::RepeatEvent<led::Controller, &led::Controller::decrease>
+    decreaseEvent{controller};
+avr::TimedEvent increaseTimer{increaseEvent};
+avr::TimedEvent decreaseTimer{decreaseEvent};
+led::LatchedButton upLatch{up, increaseTimer};
+led::LatchedButton downLatch{down, decreaseTimer};
+
+// Configure mode button
+led::ModeEvent modeEvent{controller};
+avr::TimedEvent modeTimer{modeEvent};
+led::LatchedButton modeLatch{mode, modeTimer};
+
 }  // anon namespace
 
 int main()
 {
-    // Configure the buttons
-    avr::Pin buttonUp{avr::ConstPin<avr::PortD, 6>::toPin()};
-    avr::Pin buttonDown{avr::ConstPin<avr::PortD, 5>::toPin()};
-    avr::Pin buttonMode{avr::ConstPin<avr::PortD, 7>::toPin()};
-    avr::Button up{buttonUp};
-    avr::Button down{buttonDown};
-    avr::Button mode{buttonMode};
-
-    // Configure the Display
-    avr::Pin digitSelectors[3] = {
-        {avr::ConstPin<avr::PortB, 2>::toPin()},
-        {avr::ConstPin<avr::PortB, 1>::toPin()},
-        {avr::ConstPin<avr::PortB, 0>::toPin()}
-    };
-	led::SevenSegmentArray display{digitSelectors, avr::PortC{}};
-
-    // Configure millisecond timer
-    avr::MsTimer timer{};
-
-    // Configure DMX
-    dmx::Dmx dmx{avr::ConstPin<avr::PortD, 2>{}};
-
-    // Configure LED
-    led::WS2812 ws2812{avr::ConstPin<avr::PortD, 3>{}};
-
-    // Load the saved values
-    avr::Eeprom eeprom{0};
-    for (uint8_t i = 0; i < 3; ++i)
+    for (uint8_t i = 0; i < led::ModeEvent::MAX_MODE; ++i)
     {
-        dmx.setChannel(i, eeprom[i]);
+        dmxOutput.setChannel(i, eeprom[i]);
     }
-
-    // Create the controller
-    led::Controller controller{dmx, display};
-
-    // Configure colour LED setter
-    led::RgbDisplayEvent rgbDisplayEvent{ws2812, controller};
-    avr::TimedEvent rgbDisplayTimer{rgbDisplayEvent};
     rgbDisplayTimer.reset(1);
-
-    // Configure EEPROM saver
-    led::SaveEvent saveEvent{eeprom, controller};
-    avr::TimedEvent saveTimer{saveEvent};
-
-    // Configure plus and minus buttons
-    avr::RepeatEvent<led::Controller, &led::Controller::increase>
-        increaseEvent{controller};
-    avr::RepeatEvent<led::Controller, &led::Controller::decrease>
-        decreaseEvent{controller};
-    avr::TimedEvent increaseTimer{increaseEvent};
-    avr::TimedEvent decreaseTimer{decreaseEvent};
-    led::LatchedButton upLatch{up, increaseTimer};
-    led::LatchedButton downLatch{down, decreaseTimer};
-    
-    // Configure mode button
-    led::ModeEvent modeEvent{controller};
-    avr::TimedEvent modeTimer{modeEvent};
-    led::LatchedButton modeLatch{mode, modeTimer};
+    controller.setModifierChannel(0);
 
     // Globally enable interrupts
     sei();
@@ -125,6 +127,7 @@ int main()
                 };
                 ws2812.sendRgb(&ledColour, 1);
                 rgbDisplayTimer.reset(RGB_INTERVAL);
+                saveTimer.reset(SAVE_INTERVAL);
             }
 
             upLatch.test();

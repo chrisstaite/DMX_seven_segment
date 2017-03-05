@@ -18,9 +18,7 @@ Controller::Controller(dmx::Dmx& dmx, SevenSegmentArray& display) :
     m_dmx{dmx},
     m_display{display},
     m_currentChannel{0}
-{
-    setModifierChannel(m_currentChannel);
-}
+{ }
 
 void Controller::setModifierChannel(uint8_t channel)
 {

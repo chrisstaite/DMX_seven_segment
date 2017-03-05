@@ -48,7 +48,7 @@ constexpr uint16_t calcPrescale(uint32_t baud)
 constexpr uint16_t BREAK_SPEED = calcPrescale(100000u);
 constexpr uint16_t DMX_SPEED = calcPrescale(250000u);
 constexpr uint8_t BREAK_FORMAT = (0<<USBS) | (2<<UPM0) | (3<<UCSZ0);
-constexpr uint8_t DMX_FORMAT = (1<<USBS) | (2<<UPM0) | (3<<UCSZ0);
+constexpr uint8_t DMX_FORMAT = (1<<USBS) | (0<<UPM0) | (3<<UCSZ0);
 
 static_assert(DMX_SPEED > 0, "CPU too slow for DMX");
 
@@ -123,13 +123,12 @@ void Dmx::setBaud(uint16_t baudSetting, uint8_t format)
   UCSRA = 0;
   UBRRH = baudSetting >> 8;
   UBRRL = baudSetting;
-  UCSRC = format;
+  UCSRC = format | (1 << URSEL);
 }
 
 void Dmx::udreInterrupt()
 {
-    UDR = m_data[m_currentChannel];
-    ++m_currentChannel;
+    UDR = m_data[m_currentChannel++];
 
     if (m_currentChannel >= MAX_CHANNEL)
     {

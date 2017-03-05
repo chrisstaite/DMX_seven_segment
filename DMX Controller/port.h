@@ -34,6 +34,10 @@ class Port
     }
 };
 
+class PortA : public Port<AVR_IOR_PARAM(PORTA),
+                          AVR_IOR_PARAM(DDRA),
+                          AVR_IOR_PARAM(PINA)>
+{ };
 
 class PortB : public Port<AVR_IOR_PARAM(PORTB),
                           AVR_IOR_PARAM(DDRB),

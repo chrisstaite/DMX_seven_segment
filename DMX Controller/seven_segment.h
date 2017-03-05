@@ -40,9 +40,17 @@ class SevenSegment
     /// 2 segments at a time.  A seven segment is therefore
     /// turned on in a sequence of four.
     ///
-    /// \param digit     The digit to display
+    /// \param digit     The digit to display, 0-9, 10 is blank - unchecked
     /// \param sequence  A value between 0 and 3 - unchecked
     void value(uint8_t digit, uint8_t sequence);
+
+    /// Display the decimal point for this digit.  This should
+    /// only be used when sequence is 3 or the digit 10 is set
+    /// (i.e. it's blank) due to current draw.  However, in
+    /// practice it's probably ok.
+    ///
+    /// \param on  True to turn it on, false for off
+    void dp(bool on);
 
   private:
     volatile uint8_t& m_port;

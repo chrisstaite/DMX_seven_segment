@@ -65,7 +65,9 @@ template<typename P, unsigned int N>
 WS2812::WS2812(avr::ConstPin<P, N> pin) :
     m_mask{pin.mask()},
     m_port{pin.port()}
-{ }
+{
+    pin.output();
+}
 
 }  // namespace led
 
