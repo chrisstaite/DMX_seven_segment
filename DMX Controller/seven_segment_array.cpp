@@ -29,10 +29,6 @@ static_assert(
 
 led::SevenSegmentArray* s_display;
 
-constexpr uint16_t POWERS[] = { 1, 10, 100 };
-static_assert(sizeof(POWERS) / sizeof(POWERS[0]) == led::SevenSegmentArray::DIGITS,
-              "More powers needed in POWERS array");
-
 }  // anon namespace
 
 // Overflow for Timer0 to update the display
@@ -76,10 +72,31 @@ void SevenSegmentArray::setValue(int16_t value)
         value = -1;
     }
 
-    if (value != m_currentValue)
+    for (uint8_t i = 0; i < DIGITS; ++i)
     {
-        m_currentStep = 0;
-        m_currentValue = value;
+        uint8_t newValue;
+        if (value == -1 || (value == 0 && i > 0))
+        {
+            newValue = SevenSegment::Letters::Blank;
+        }
+        else
+        {
+            newValue = value % 10;
+            value = value / 10;
+        }
+
+        if (m_currentValues[DIGITS - i - 1] != newValue)
+        {
+            m_currentValues[DIGITS - i - 1] = newValue;
+        }
+    }
+}
+
+void SevenSegmentArray::setValue(uint8_t index, uint8_t value)
+{
+    if (index < DIGITS && value < SevenSegment::Letters::MAX + 1)
+    {
+        m_currentValues[index] = value;
     }
 }
 
@@ -96,20 +113,7 @@ void SevenSegmentArray::displayStep()
         }
     }
 
-    // Get the digit to display
-    uint16_t value;
-    uint16_t divisor = POWERS[digit];
-    if ((m_currentValue == -1) ||
-            (digit > 0 && static_cast<uint16_t>(m_currentValue) < divisor))
-    {
-        value = 10;
-    }
-    else
-    {
-        value = (m_currentValue / divisor) % 10;
-    }
-
-    m_segment.value(value, sequenceIndex);
+    m_segment.value(m_currentValues[digit], sequenceIndex);
 
     if (sequenceIndex == 0)
     {

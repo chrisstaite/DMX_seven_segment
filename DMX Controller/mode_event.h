@@ -20,7 +20,7 @@ class Controller;
 class ModeEvent : public avr::Event
 {
   public:
-    static constexpr uint8_t MAX_MODE = 3;
+    static constexpr uint8_t MAX_MODE = 4;
 
     ModeEvent(Controller& controller);
 

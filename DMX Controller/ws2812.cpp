@@ -257,7 +257,7 @@ void WS2812::sendRgb(uint8_t* values, uint16_t count)
     {
         // One line only to evaluate to ldi rn, Z+
         // Does not get optimized to that on two lines...
-        uint8_t curbyte = 0;//*values++;
+        uint8_t curbyte = *values++;
 
         asm volatile(
             "ldi %0, 8\n\t"

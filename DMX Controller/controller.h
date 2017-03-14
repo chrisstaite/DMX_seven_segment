@@ -25,6 +25,8 @@ class Controller
     Controller(dmx::Dmx& dmx, SevenSegmentArray& display);
 
     void setModifierChannel(uint8_t channel);
+    
+    void showValue();
 
     uint8_t& red();
     

@@ -54,6 +54,13 @@ class SevenSegmentArray
     /// \param value  The value to display
     void setValue(int16_t value);
 
+    /// Set an individual display value, should be between
+    /// 0-9 or a value from SevenSegmentArray::Letters
+    ///
+    /// \param index  The index between 0 and DIGITS
+    /// \param value  The value to display
+    void setValue(uint8_t index, uint8_t value);
+
     /// Display the next bit, this wants to be performed roughly
     /// 50fps for the DIGITS * SEQUENCE_STEPS long sequence.  This
     /// equates to about 600 times a second (STEPSPS).
@@ -65,7 +72,7 @@ class SevenSegmentArray
 
     avr::Pin (&m_digitSelectors)[DIGITS];
     SevenSegment m_segment;
-    int16_t m_currentValue;
+    uint8_t m_currentValues[DIGITS];
     uint8_t m_currentStep;
 };
 
@@ -75,9 +82,10 @@ SevenSegmentArray::SevenSegmentArray(
         Port digitPort) :
     m_digitSelectors{digitSelectors},
     m_segment{digitPort},
-    m_currentValue{-1},
+    m_currentValues{},
     m_currentStep{0}
 {
+    setValue(-1);
     init();
 }
 

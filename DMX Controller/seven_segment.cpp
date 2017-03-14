@@ -41,7 +41,13 @@ constexpr uint8_t NUMBER_SEGMENTS[] = {
   toValue(1, 1, 1, 0, 0, 0, 0),  // 7
   toValue(1, 1, 1, 1, 1, 1, 1),  // 8
   toValue(1, 1, 1, 0, 0, 1, 1),  // 9
-  toValue(0, 0, 0, 0, 0, 0, 0)   // Blank
+  toValue(0, 0, 0, 0, 0, 0, 0),  // Blank
+  toValue(1, 1, 1, 0, 1, 1, 1),  // A
+  toValue(1, 0, 0, 1, 1, 1, 0),  // C
+  toValue(1, 0, 0, 1, 1, 1, 1),  // E
+  toValue(0, 1, 1, 0, 1, 1, 1),  // H
+  toValue(0, 0, 0, 1, 1, 1, 0),  // L
+  toValue(0, 1, 1, 1, 1, 1, 0),  // U
 };
 
 }  // anon namespace

@@ -32,6 +32,18 @@ class SevenSegment
 
     SevenSegment(const SevenSegment&) = delete;
     SevenSegment& operator=(const SevenSegment&) = delete;
+    
+    enum Letters : uint8_t
+    {
+        Blank = 10,
+        A,
+        C,
+        E,
+        H,
+        L,
+        U,
+        MAX = U
+    };
 
     /// Display part of a digit in order to limit the amount
     /// of current sunk by the common cathode pin.  Since a
@@ -40,7 +52,8 @@ class SevenSegment
     /// 2 segments at a time.  A seven segment is therefore
     /// turned on in a sequence of four.
     ///
-    /// \param digit     The digit to display, 0-9, 10 is blank - unchecked
+    /// \param digit     The digit to display, 0-9 or a value
+    ///                  from Letters - unchecked
     /// \param sequence  A value between 0 and 3 - unchecked
     void value(uint8_t digit, uint8_t sequence);
 

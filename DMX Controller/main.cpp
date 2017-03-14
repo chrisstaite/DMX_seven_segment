@@ -2,6 +2,7 @@
 #include "pin.h"
 #include "port.h"
 #include "const_pin.h"
+#include "seven_segment.h"
 #include "seven_segment_array.h"
 #include "button.h"
 #include "ws2812.h"
@@ -14,6 +15,7 @@
 #include "repeat_event.h"
 #include "latched_button.h"
 #include "mode_event.h"
+#include "value_display_event.h"
 #include "controller.h"
 
 #include <avr/interrupt.h>
@@ -27,6 +29,10 @@ constexpr uint16_t SAVE_INTERVAL = 10000;
 /// The number of milliseconds between the changing mode and
 /// displaying the selected colour on the LED
 constexpr uint16_t RGB_INTERVAL = 2000;
+
+/// The number of milliseconds between the chaning mode and
+/// displaying the current channel value on the display
+constexpr uint16_t CHANNEL_SHOW_INTERVAL = 800;
 
 // Configure the buttons
 avr::Pin buttonUp{avr::ConstPin<avr::PortD, 6>::toPin()};
@@ -62,6 +68,10 @@ led::Controller controller{dmxOutput, display};
 // Configure colour LED setter
 led::RgbDisplayEvent rgbDisplayEvent{ws2812, controller};
 avr::TimedEvent rgbDisplayTimer{rgbDisplayEvent};
+
+// Configure timer to show the current value
+led::ValueDisplayEvent valueDisplayEvent{controller};
+avr::TimedEvent valueDisplayTimer{valueDisplayEvent};
 
 // Configure EEPROM saver
 led::SaveEvent saveEvent{eeprom, controller};
@@ -107,6 +117,7 @@ int main()
 
             (void) saveTimer.tick();
             (void) rgbDisplayTimer.tick();
+            (void) valueDisplayTimer.tick();
 
             if (increaseTimer.tick() || decreaseTimer.tick())
             {
@@ -115,19 +126,24 @@ int main()
                     rgbDisplayTimer.reset(1);
                 }
                 saveTimer.reset(SAVE_INTERVAL);
+                valueDisplayTimer.cancel();
             }
 
             if (modeTimer.tick())
             {
                 uint8_t mode = modeEvent.mode();
                 led::RGB ledColour {
-                    mode == 0 ? static_cast<uint8_t>(255) : static_cast<uint8_t>(0),
-                    mode == 1 ? static_cast<uint8_t>(255) : static_cast<uint8_t>(0),
-                    mode == 2 ? static_cast<uint8_t>(255) : static_cast<uint8_t>(0)
+                    (mode == 0 || mode == 3) ? static_cast<uint8_t>(255) : static_cast<uint8_t>(0),
+                    (mode == 1 || mode == 3) ? static_cast<uint8_t>(255) : static_cast<uint8_t>(0),
+                    (mode == 2 || mode == 3) ? static_cast<uint8_t>(255) : static_cast<uint8_t>(0)
                 };
                 ws2812.sendRgb(&ledColour, 1);
                 rgbDisplayTimer.reset(RGB_INTERVAL);
-                saveTimer.reset(SAVE_INTERVAL);
+
+                display.setValue(2, led::SevenSegment::Letters::C);
+                display.setValue(1, led::SevenSegment::Letters::H);
+                display.setValue(0, mode + 1);
+                valueDisplayTimer.reset(CHANNEL_SHOW_INTERVAL);
             }
 
             upLatch.test();

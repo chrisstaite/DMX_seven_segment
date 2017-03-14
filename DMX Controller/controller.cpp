@@ -23,10 +23,12 @@ Controller::Controller(dmx::Dmx& dmx, SevenSegmentArray& display) :
 void Controller::setModifierChannel(uint8_t channel)
 {
     m_currentChannel = channel;
+    showValue();
+}
 
-    // Change the current mode
-    uint8_t& value = m_dmx[m_currentChannel];
-    m_display.setValue(value);
+void Controller::showValue()
+{
+    m_display.setValue(m_dmx[m_currentChannel]);
 }
 
 void Controller::increase()
