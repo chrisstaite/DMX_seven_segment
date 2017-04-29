@@ -12,7 +12,7 @@
 
 namespace avr {
 
-Eeprom::Eeprom(uint16_t base) :
+Eeprom::Eeprom(uint8_t* base) :
     m_base{base}
 { }
 

@@ -19,6 +19,7 @@
 #include "controller.h"
 
 #include <avr/interrupt.h>
+#include <avr/eeprom.h>
 
 namespace {
 
@@ -35,8 +36,8 @@ constexpr uint16_t RGB_INTERVAL = 2000;
 constexpr uint16_t CHANNEL_SHOW_INTERVAL = 800;
 
 // Configure the buttons
-avr::Pin buttonUp{avr::ConstPin<avr::PortD, 6>::toPin()};
-avr::Pin buttonDown{avr::ConstPin<avr::PortD, 5>::toPin()};
+avr::Pin buttonUp{avr::ConstPin<avr::PortD, 5>::toPin()};
+avr::Pin buttonDown{avr::ConstPin<avr::PortD, 6>::toPin()};
 avr::Pin buttonMode{avr::ConstPin<avr::PortD, 7>::toPin()};
 avr::Button up{buttonUp};
 avr::Button down{buttonDown};
@@ -57,10 +58,12 @@ avr::MsTimer timer{};
 dmx::Dmx dmxOutput{avr::ConstPin<avr::PortD, 2>{}};
 
 // Configure LED
-led::WS2812 ws2812{avr::ConstPin<avr::PortA, 0>{}};
+led::WS2812 ws2812{avr::ConstPin<avr::PortD, 3>{}};
 
+// Set the default EEPROM
+uint8_t channelStorage[] EEMEM = { 0, 0, 0, 0 };
 // Load the saved values
-avr::Eeprom eeprom{0};
+avr::Eeprom eeprom{channelStorage};
 
 // Create the controller
 led::Controller controller{dmxOutput, display};
@@ -121,10 +124,7 @@ int main()
 
             if (increaseTimer.tick() || decreaseTimer.tick())
             {
-                if (!rgbDisplayTimer.active())
-                {
-                    rgbDisplayTimer.reset(1);
-                }
+                rgbDisplayTimer.reset(1);
                 saveTimer.reset(SAVE_INTERVAL);
                 valueDisplayTimer.cancel();
             }

@@ -18,7 +18,7 @@ class EepromByteAccess;
 class Eeprom
 {
   public:
-    Eeprom(uint16_t base);
+    Eeprom(uint8_t* base);
 
     void write(uint16_t offset, uint8_t value);
 
@@ -31,7 +31,7 @@ class Eeprom
     EepromByteAccess operator[] (uint16_t offset);
 
   private:
-    uint16_t m_base;
+    uint8_t* m_base;
 };
 
 class EepromByteAccess

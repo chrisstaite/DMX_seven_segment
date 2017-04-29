@@ -16,14 +16,12 @@ namespace led {
 
 RgbDisplayEvent::RgbDisplayEvent(WS2812& display, Controller& controller) :
     m_display{display},
-    m_red{controller.red()},
-    m_green{controller.green()},
-    m_blue{controller.blue()}
+    m_controller{controller}
 { }
 
 void RgbDisplayEvent::fire(avr::TimedEvent& timer)
 {
-    led::RGB ledColour {m_red, m_green, m_blue};
+    led::RGB ledColour {m_controller.red(), m_controller.green(), m_controller.blue()};
     m_display.sendRgb(&ledColour, 1);
 }
 

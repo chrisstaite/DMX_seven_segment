@@ -50,10 +50,11 @@ MCU = atmega32
 #     automatically to create a 32-bit value in your source code.
 F_CPU = 8000000
 
-AVRDUDE_PROGRAMMER = stk500v2#avrisp2
+#AVRDUDE_PROGRAMMER = stk500v2
+AVRDUDE_PROGRAMMER = usbasp
 
 # com1 = serial port. Use lpt1 to connect to parallel port.
-AVRDUDE_PORT = /dev/cu.usbserial*    # programmer connected to serial device
+#AVRDUDE_PORT = /dev/cu.usbserial*    # programmer connected to serial device
 
 # Output format. (can be srec, ihex, binary)
 FORMAT = ihex
@@ -216,7 +217,7 @@ LDFLAGS += $(PRINTF_LIB) $(SCANF_LIB) $(MATH_LIB)
 #
 
 AVRDUDE_WRITE_FLASH = -U flash:w:$(OBJDIR)/$(TARGET).hex# -U lfuse:w:0xe4:m -U hfuse:w:0xd9:m
-#AVRDUDE_WRITE_EEPROM = -U eeprom:w:$(TARGET).eep
+AVRDUDE_WRITE_EEPROM = -U eeprom:w:$(OBJDIR)/$(TARGET).eep
 
 
 # Uncomment the following if you want avrdude's erase cycle counter.
@@ -233,7 +234,11 @@ AVRDUDE_WRITE_FLASH = -U flash:w:$(OBJDIR)/$(TARGET).hex# -U lfuse:w:0xe4:m -U h
 # to submit bug reports.
 #AVRDUDE_VERBOSE = -v -v
 
+ifeq ($(AVRDUDE_PORT),)
+AVRDUDE_FLAGS = -p $(MCU) -c $(AVRDUDE_PROGRAMMER)
+else
 AVRDUDE_FLAGS = -p $(MCU) -P $(AVRDUDE_PORT) -c $(AVRDUDE_PROGRAMMER)
+endif
 AVRDUDE_FLAGS += $(AVRDUDE_NO_VERIFY)
 AVRDUDE_FLAGS += $(AVRDUDE_VERBOSE)
 AVRDUDE_FLAGS += $(AVRDUDE_ERASE_COUNTER)

@@ -27,9 +27,7 @@ class RgbDisplayEvent : public avr::Event
     
   private:
     WS2812& m_display;
-    uint8_t& m_red;
-    uint8_t& m_green;
-    uint8_t& m_blue;
+    Controller& m_controller;
 };
 
 }  // namespace led

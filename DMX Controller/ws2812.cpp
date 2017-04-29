@@ -75,8 +75,8 @@ void inline ws2812_sendarray_mask(uint8_t *data,uint16_t datlen,uint8_t maskhi)
   
   DDRA |= maskhi; // Enable output
   
-  masklo	=~maskhi&PORTA;
-  maskhi |=        PORTA;
+  masklo	=~maskhi&PORTD;
+  maskhi |=        PORTD;
   
   sreg_prev=SREG;
   cli();  
@@ -141,7 +141,7 @@ w_nop16
     "       dec   %0    \n\t"    //  '1' [+2] '0' [+2]
     "       brne  loop%=\n\t"    //  '1' [+3] '0' [+4]
     :	"=&d" (ctr)
-    :	"r" (curbyte), "I" (_SFR_IO_ADDR(PORTA)), "r" (maskhi), "r" (masklo)
+    :	"r" (curbyte), "I" (_SFR_IO_ADDR(PORTD)), "r" (maskhi), "r" (masklo)
     );
   }
   

@@ -63,6 +63,7 @@
 		839FE8A51E4B978700EAD2C6 /* pin.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = pin.h; sourceTree = "<group>"; };
 		83A655F41E787DBC009DC6EC /* value_display_event.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = value_display_event.h; sourceTree = "<group>"; };
 		83A655F51E787E08009DC6EC /* value_display_event.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = value_display_event.cpp; sourceTree = "<group>"; };
+		83C43E571EB509BD0064788B /* repeat_event.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = repeat_event.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -91,6 +92,7 @@
 		831AF1E31E50F68900FEB45E /* Events */ = {
 			isa = PBXGroup;
 			children = (
+				83C43E571EB509BD0064788B /* repeat_event.h */,
 				831AF1C81E508E4C00FEB45E /* save_event.h */,
 				831AF1C91E508E8600FEB45E /* save_event.cpp */,
 				831AF1CB1E50964500FEB45E /* rgb_display_event.h */,

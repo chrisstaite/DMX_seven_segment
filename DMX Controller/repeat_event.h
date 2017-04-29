@@ -20,7 +20,7 @@ class RepeatEvent : public Event
 {
   public:
     /// The number of milliseconds for a repeat button press
-    static constexpr uint16_t REPEAT_TIME = 150;
+    static constexpr uint16_t REPEAT_TIME = 100;
 
     RepeatEvent(T& instance) :
         m_instance{instance}
