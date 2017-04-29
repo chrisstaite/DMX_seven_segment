@@ -216,7 +216,7 @@ LDFLAGS += $(PRINTF_LIB) $(SCANF_LIB) $(MATH_LIB)
 # to get a full listing.
 #
 
-AVRDUDE_WRITE_FLASH = -U flash:w:$(OBJDIR)/$(TARGET).hex# -U lfuse:w:0xe4:m -U hfuse:w:0xd9:m
+AVRDUDE_WRITE_FLASH = -U flash:w:$(OBJDIR)/$(TARGET).hex -U lfuse:w:0xe4:m -U hfuse:w:0xd9:m
 AVRDUDE_WRITE_EEPROM = -U eeprom:w:$(OBJDIR)/$(TARGET).eep
 
 
