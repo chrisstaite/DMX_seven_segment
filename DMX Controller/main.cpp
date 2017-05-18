@@ -140,9 +140,9 @@ int main()
                 ws2812.sendRgb(&ledColour, 1);
                 rgbDisplayTimer.reset(RGB_INTERVAL);
 
-                display.setValue(2, led::SevenSegment::Letters::C);
+                display.setValue(0, led::SevenSegment::Letters::C);
                 display.setValue(1, led::SevenSegment::Letters::H);
-                display.setValue(0, mode + 1);
+                display.setValue(2, mode + 1);
                 valueDisplayTimer.reset(CHANNEL_SHOW_INTERVAL);
             }
 
